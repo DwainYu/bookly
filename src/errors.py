@@ -100,6 +100,14 @@ class TagAlreadyExists(BooklyException):
     pass
 
 
+class AccountNotVerified(BooklyException):
+    """
+    账户未验证异常类。
+    """
+
+    pass
+
+
 # 异步异常处理函数
 def create_exception_handler(
     status_code: int, init_detail: Any
@@ -118,7 +126,6 @@ def register_error_handlers(app: FastAPI):
     """
     注册异常处理器。
     """
-
 
     app.add_exception_handler(
         InvalidToken,
@@ -168,7 +175,6 @@ def register_error_handlers(app: FastAPI):
             },
         ),
     )
-
 
     app.add_exception_handler(
         InsufficientPermission,
@@ -238,14 +244,14 @@ def register_error_handlers(app: FastAPI):
         ),
     )
 
-    @app.exception_handler(500)
-    async def internal_server_error(request, exc):
-
-        return JSONResponse(
-            content={
-                "message": "Oops! Something went wrong",
-                "error_code": "server_error",
+    app.add_exception_handler(
+        AccountNotVerified,
+        create_exception_handler(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            init_detail={
+                "message": "Account not verified",
+                "error_code": "account_not_verified",
+                "resolution": "Please check your email for verification details",
             },
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        )
-
+        ),
+    )

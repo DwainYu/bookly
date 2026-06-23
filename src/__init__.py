@@ -7,33 +7,44 @@ from src.errors import (
     register_error_handlers,
 )
 
-from contextlib import asynccontextmanager
-from src.db.main import init_db
+from src.middleware import register_middleware
 
 
 
-
-# 应用生命周期管理器作用：在FastAPI应用启动和停止时执行一些操作比如：初始化数据库、关闭数据库连接等
-@asynccontextmanager
-async def Life_span(app: FastAPI):
-    print("server started...")
-    
-    await init_db()
-    yield
-    print("server stopped...")
 
 version = "v1"
 
+description = """
+A REST API for a book review web service.
+
+This REST API is able to;
+- Create Read Update And delete books
+- Add reviews to books
+- Add tags to Books e.t.c.
+    """
+
+version_prefix ="/api/{version}"
+
 app = FastAPI(
     title="Booly",
-    description="A REST API for a book review web service",
+    description=description,
     version=version,
-
-    #lifespan=Life_span,注释生命周期管理器，应用启动时不会执行init_db函数，初始化数据库
+    license_info={"name": "MIT License", "url": "https://opensource.org/license/mit"},
+    contact={
+        "name": "Playmaker",
+        "url": "https://github.com/DwainYu",
+        "email": "Playmaker@qq.com",
+    },
+    
+    openapi_url=f"{version_prefix}/openapi.json",
+    docs_url=f"{version_prefix}/docs",
+    redoc_url=f"{version_prefix}/redoc"
+    
 
 
 )
 
+register_middleware(app)
 
 register_error_handlers(app)  
 

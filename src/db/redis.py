@@ -1,4 +1,4 @@
-import aioredis
+import redis.asyncio as aioredis
 from src.config import Config
 
 JTI_EXPIRE = 60 * 60 * 24
@@ -10,7 +10,7 @@ JTI_EXPIRE = 60 * 60 * 24
 # 2. 提供一个全局实例，方便直接使用
 
 #db=0 表示使用第一个数据库
-token_blocklist = aioredis.Redis(host=Config.REDIS_HOST, port=Config.REDIS_PORT, db=0)
+token_blocklist = aioredis.from_url(Config.REDIS_URL)
 
 async def add_jti_to_blocklist(jti: str) -> None:
     """将jti添加到黑名单中"""

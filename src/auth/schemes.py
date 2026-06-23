@@ -11,14 +11,12 @@ class UserCreateModel(BaseModel):
 
 
     # 用户名
-    first_name: str = Field(max_length=20, min_length=2, description="姓名")
-    last_name: str = Field(max_length=20, min_length=2, description="姓氏")
+    first_name: str = Field(max_length=20, description="姓名")
+    last_name: str = Field(max_length=20, description="姓氏")
     # 用户名
-    username: str = Field(max_length=8, min_length=4, description="用户名")
+    username: str = Field(max_length=8, description="用户名")
     # 邮箱
-    email: str = Field(max_length=50, min_length=4, description="邮箱")
-    # 角色
-    role: str = Field(max_length=50, min_length=4, description="角色")
+    email: str = Field(max_length=50, description="邮箱")
     # 密码
     password: str = Field(min_length=8, description="密码")
 
@@ -47,3 +45,15 @@ class UserBooksModel(UserModel):
 class UserLoginModel(BaseModel):
     email: str = Field(max_length=50, min_length=4, description="邮箱")
     password: str = Field(min_length=8, description="密码")
+
+class EmailModel(BaseModel):
+    address: list[str]
+
+
+class PasswordResetRequestModel(BaseModel):
+    email: str
+
+
+class PasswordResetConfirmModel(BaseModel):
+    new_password: str
+    confirm_new_password: str

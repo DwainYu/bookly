@@ -1,4 +1,5 @@
 # 创建与认证相关的实用函数。实用函数的作用是简化认证相关的代码，提高代码的可读性和可维护性。
+from itsdangerous import URLSafeTimedSerializer
 
 import logging
 import uuid
@@ -65,3 +66,25 @@ def decode_token(token: str) -> dict:
     except jwt.PyJWTError as e:
         logging.exception(e)
         return None
+
+
+serializer = URLSafeTimedSerializer(
+    secret_key=Config.JWT_SECRET, salt="email-configuration"
+)
+
+
+def create_url_safe_token(data: dict):
+    """创建 URL 安全的签名令牌，用于邮箱验证和密码重置链接"""
+    token = serializer.dumps(data)
+    return token
+
+
+def decode_url_safe_token(token: str):
+    """解码 URL 安全令牌，如果验证失败则返回 None"""
+    try:
+        token_data = serializer.loads(token)
+        return token_data
+    except Exception as e:
+        logging.error(str(e))
+        return None
+        

@@ -11,7 +11,7 @@ from collections.abc import AsyncGenerator
 async_engine = AsyncEngine(
     create_engine(
         url=Config.DATABASE_URL, 
-        echo=True
+       
         )
 )
 
